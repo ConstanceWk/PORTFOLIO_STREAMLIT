@@ -237,82 +237,84 @@ def display_profile_image():
         """, unsafe_allow_html=True)
 
 
+def create_neural_network_viz():
+    # Création des nœuds
+    num_layers = 4
+    nodes_per_layer = [4, 6, 6, 3]
+    nodes_x = []
+    nodes_y = []
+    nodes_z = []
+    edge_x = []
+    edge_y = []
+    edge_z = []
+    
+    # Positionnement des nœuds
+    for i, num_nodes in enumerate(nodes_per_layer):
+        layer_x = np.repeat(i, num_nodes)
+        layer_y = np.linspace(-1, 1, num_nodes)
+        layer_z = np.zeros(num_nodes)
+        
+        nodes_x.extend(layer_x)
+        nodes_y.extend(layer_y)
+        nodes_z.extend(layer_z)
+        
+        # Connexions entre les couches
+        if i < len(nodes_per_layer) - 1:
+            for j in range(num_nodes):
+                for k in range(nodes_per_layer[i + 1]):
+                    edge_x.extend([layer_x[j], i + 1, None])
+                    edge_y.extend([layer_y[j], np.linspace(-1, 1, nodes_per_layer[i + 1])[k], None])
+                    edge_z.extend([0, 0, None])
+    
+    # Création des traces
+    edges_trace = go.Scatter3d(
+        x=edge_x, y=edge_y, z=edge_z,
+        mode='lines',
+        line=dict(color='#8A4FFF', width=1),
+        opacity=0.5
+    )
+    
+    nodes_trace = go.Scatter3d(
+        x=nodes_x, y=nodes_y, z=nodes_z,
+        mode='markers',
+        marker=dict(
+            symbol='circle',
+            size=8,
+            color=['#E6E6FA'] * nodes_per_layer[0] +  # Input layer
+                  ['#8A4FFF'] * (nodes_per_layer[1] + nodes_per_layer[2]) +  # Hidden layers
+                  ['#FF69B4'] * nodes_per_layer[3],  # Output layer
+            line=dict(color='#fff', width=0.5)
+        ),
+        text=(['Input'] * nodes_per_layer[0] +
+              ['Hidden'] * (nodes_per_layer[1] + nodes_per_layer[2]) +
+              ['Output'] * nodes_per_layer[3])
+    )
+    
+    # Layout
+    layout = go.Layout(
+        title=dict(
+            text='Réseau de Neurones : De la Donnée à l\'Innovation',
+            y=0.95,
+            font=dict(size=24, color='#8A4FFF')
+        ),
+        showlegend=False,
+        scene=dict(
+            xaxis=dict(visible=False),
+            yaxis=dict(visible=False),
+            zaxis=dict(visible=False),
+            camera=dict(
+                up=dict(x=0, y=0, z=1),
+                center=dict(x=0, y=0, z=0),
+                eye=dict(x=2, y=2, z=2)
+            )
+        ),
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=0, r=0, t=0, b=0)
+    )
+    
+    fig = go.Figure(data=[edges_trace, nodes_trace], layout=layout)
+    return fig
 
-def create_3d_brain_viz():
-   # Générer des données pour la forme du cerveau
-   t = np.linspace(0, 10, 100)
-   x = np.outer(np.cos(t), np.cos(t))
-   y = np.outer(np.cos(t), np.sin(t))
-   z = np.outer(np.ones(100), np.sin(t))
-
-   # Créer la visualisation 3D
-   fig = make_subplots(specs=[[{'type': 'surface'}]])
-
-   # Surface principale
-   surface = go.Surface(
-       x=x, y=y, z=z,
-       colorscale=[[0, '#E0AEFF'], [1, '#8A4FFF']],
-       opacity=0.8,
-       showscale=False,
-       hoverinfo='none'
-   )
-   fig.add_trace(surface)
-
-   # Ajouter des particules animées
-   particles_x = np.random.randn(50)
-   particles_y = np.random.randn(50)
-   particles_z = np.random.randn(50)
-   
-   fig.add_trace(go.Scatter3d(
-       x=particles_x, y=particles_y, z=particles_z,
-       mode='markers',
-       marker=dict(
-           size=4,
-           color='#8A4FFF',
-           opacity=0.8
-       ),
-       hoverinfo='none'
-   ))
-
-   # Mise en page
-   fig.update_layout(
-       title=dict(
-           text='Mon Cerveau de Data Scientist',
-           x=0.5,
-           y=0.95,
-           font=dict(size=24, color='#8A4FFF')
-       ),
-       scene=dict(
-           xaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
-           yaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
-           zaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
-           camera=dict(
-               up=dict(x=0, y=0, z=1),
-               center=dict(x=0, y=0, z=0),
-               eye=dict(x=1.5, y=1.5, z=1.5)
-           ),
-       ),
-       paper_bgcolor='rgba(0,0,0,0)',
-       plot_bgcolor='rgba(0,0,0,0)',
-       margin=dict(l=0, r=0, t=0, b=0),
-       showlegend=False,
-   )
-
-   # Animation
-   fig.update_layout(
-       updatemenus=[{
-           'type': 'buttons',
-           'showactive': False,
-           'buttons': [{
-               'label': 'Play',
-               'method': 'animate',
-               'args': [None, {'frame': {'duration': 50, 'redraw': True}, 'fromcurrent': True}]
-           }]
-       }]
-   )
-
-   return fig
-# Reste du code identique aux versions précédentes
 def home():
     st.markdown('<h1 class="main-title">Portfolio de Constance Walusiak</h1>', unsafe_allow_html=True)
 
@@ -445,51 +447,12 @@ def home():
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("""
-<div class="anatomy-container" style="
-    position: relative; 
-    width: 100%; 
-    height: 400px;
-    background: rgba(255,255,255,0.7);
-    padding: 20px;
-    border-radius: 15px;
-">
-    <h3 style="text-align: center; color: #8A4FFF; margin-bottom: 20px;">
-        📊 Anatomie d'une Data Scientist
-    </h3>
 
-    <div style="
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 200px;
-        background: rgba(138,79,255,0.2);
-        padding: 15px;
-        border-radius: 15px;
-        text-align: center;
-    ">
-        🧠 Cerveau:<br>
-        40% Algorithmes<br>
-        40% Memes<br>
-        20% Lyrics de K-pop
-    </div>
-    
-    [reste du code similaire pour les autres sections]
-</div>
-""", unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div class="intro-card" style="margin: 30px 0;">
-    """, unsafe_allow_html=True)
-    
-    # Graphique 3D dans la carte
-    fig = create_3d_brain_viz()
+    st.markdown('<div class="intro-card">', unsafe_allow_html=True)
+    fig = create_neural_network_viz()
     st.plotly_chart(fig, use_container_width=True)
-
-    st.markdown("""
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+    
     
     
     PROJETS = [
