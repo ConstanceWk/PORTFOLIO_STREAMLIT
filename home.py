@@ -205,26 +205,14 @@ st.markdown("""
 
 
 
-
-    /* Style pour la barre d'outils supérieure */
+    /* Masquer la barre d'outils */
     .stApp header {
-        background: rgba(138, 79, 255, 0.15) !important;
-        backdrop-filter: blur(10px);
+        display: none !important;
     }
 
-    /* Style pour les boutons dans la barre d'outils */
-    .stApp header button {
-        color: #8A4FFF !important;
-    }
-
-    /* Hover effect pour les boutons */
-    .stApp header button:hover {
-        background: rgba(138, 79, 255, 0.2) !important;
-    }
-
-    /* Style pour les icônes dans la barre d'outils */
-    .stApp header [data-testid="stToolbar"] {
-        right: 2rem;
+    /* Ajuster l'espacement en haut */
+    .stApp > div:first-child {
+        margin-top: 0 !important;
     }
    
     
