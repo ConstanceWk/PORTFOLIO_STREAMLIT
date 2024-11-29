@@ -237,9 +237,7 @@ def display_profile_image():
 def home():
     st.markdown('<h1 class="main-title">Portfolio de Constance Walusiak</h1>', unsafe_allow_html=True)
 
-
     display_profile_image()
-
 
     st.markdown("""
     <div class="intro-card" style="
@@ -281,160 +279,192 @@ def home():
     </div>
     """, unsafe_allow_html=True)
     st.markdown("""
-<div class="intro-card fun-card" style="
-   background: linear-gradient(145deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4));
-   border: 2px dashed #8A4FFF;
-   margin-top: 30px;
-">
-   <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-       <span style="font-size: 2em;">🚀</span>
-       <h3 style="
-           margin: 0;
-           background: linear-gradient(90deg, #8A4FFF, #E0AEFF);
-           -webkit-background-clip: text;
-           -webkit-text-fill-color: transparent;
-           font-size: 1.5em;
-       ">Pourquoi l'IA et moi, on forme une équipe de choc?</h3>
-   </div>
-   <p style="
-       font-size: 1.1em;
-       line-height: 1.6;
-       color: #4a4a4a;
-       font-style: italic;
-   ">
-       Imaginez une Data Scientist qui transforme les algorithmes en véritables super-héros du quotidien ! 🦸‍♀️
-       <br><br>
-       Mon secret ? Je ne me contente pas de coder, je donne vie aux données ! Que ce soit pour prédire le prochain best-seller ou pour comprendre pourquoi votre chat préfère le coussin à son panier, mes modèles sont là pour résoudre vos mystères.
-       <br><br>
-       <span style="color: #8A4FFF; font-weight: bold;">Ma mission :</span> Rendre l'IA aussi accessible qu'une conversation avec votre meilleur ami, mais en plus intelligent (ne le dites à personne ! 🤫)
-   </p>
-</div>
-""", unsafe_allow_html=True)
-    
+    <div class="intro-card fun-card" style="
+    background: linear-gradient(145deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4));
+    border: 2px dashed #8A4FFF;
+    margin-top: 30px;
+    ">
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+        <span style="font-size: 2em;">🚀</span>
+        <h3 style="
+            margin: 0;
+            background: linear-gradient(90deg, #8A4FFF, #E0AEFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.5em;
+        ">Pourquoi l'IA et moi, on forme une équipe de choc?</h3>
+    </div>
+    <p style="
+        font-size: 1.1em;
+        line-height: 1.6;
+        color: #4a4a4a;
+        font-style: italic;
+    ">
+        Imaginez une Data Scientist qui transforme les algorithmes en véritables super-héros du quotidien ! 🦸‍♀️
+        <br><br>
+        Mon secret ? Je ne me contente pas de coder, je donne vie aux données ! Que ce soit pour prédire le prochain best-seller ou pour comprendre pourquoi votre chat préfère le coussin à son panier, mes modèles sont là pour résoudre vos mystères.
+        <br><br>
+        <span style="color: #8A4FFF; font-weight: bold;">Ma mission :</span> Rendre l'IA aussi accessible qu'une conversation avec votre meilleur ami, mais en plus intelligent (ne le dites à personne ! 🤫)
+    </p>
+    </div>
+    """, unsafe_allow_html=True)  
     st.markdown("""
-<div class="intro-card fun-card" style="
-   background: linear-gradient(145deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4));
-   padding: 20px;
-   text-align: center;
-   margin-top: 30px;
+    <div class="intro-card fun-card" style="
+    background: linear-gradient(145deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4));
+    padding: 20px;
+    text-align: center;
+    margin-top: 30px;
+    ">
+    <div style="font-size: 3em; margin-bottom: 15px;">
+        🤖 + 👩 = 💡
+    </div>
+    <div style="
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin: 20px 0;
+    ">
+        <div style="
+            background: rgba(138,79,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        ">
+            <span style="font-size: 2em;">🎯</span>
+            <p style="margin: 5px 0; font-weight: bold;">Précision</p>
+            <p style="font-size: 0.9em;">99.9% du temps... sauf quand je regarde Netflix 😅</p>
+        </div>
+        <div style="
+            background: rgba(138,79,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        ">
+            <span style="font-size: 2em;">⚡</span>
+            <p style="margin: 5px 0; font-weight: bold;">Rapidité</p>
+            <p style="font-size: 0.9em;">Plus rapide que mon café du matin ☕</p>
+        </div>
+        <div style="
+            background: rgba(138,79,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        ">
+            <span style="font-size: 2em;">🎨</span>
+            <p style="margin: 5px 0; font-weight: bold;">Créativité</p>
+            <p style="font-size: 0.9em;">Mon IA a plus d'idées que moi un lundi matin 🌈</p>
+        </div>
+    </div>
+    <div style="
+        font-size: 1.2em;
+        color: #8A4FFF;
+        font-weight: bold;
+        margin-top: 20px;
+    ">
+        Mon super pouvoir ? Transformer le café en code ! ☕→ 💻
+    </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+<div class="anatomy-container" style="
+    position: relative; 
+    width: 100%; 
+    height: 400px;
+    background: rgba(255,255,255,0.7);
+    padding: 20px;
+    border-radius: 15px;
 ">
-   <div style="font-size: 3em; margin-bottom: 15px;">
-       🤖 + 👩 = 💡
-   </div>
-   <div style="
-       display: grid;
-       grid-template-columns: repeat(3, 1fr);
-       gap: 15px;
-       margin: 20px 0;
-   ">
-       <div style="
-           background: rgba(138,79,255,0.1);
-           padding: 15px;
-           border-radius: 10px;
-           text-align: center;
-       ">
-           <span style="font-size: 2em;">🎯</span>
-           <p style="margin: 5px 0; font-weight: bold;">Précision</p>
-           <p style="font-size: 0.9em;">99.9% du temps... sauf quand je regarde Netflix 😅</p>
-       </div>
-       <div style="
-           background: rgba(138,79,255,0.1);
-           padding: 15px;
-           border-radius: 10px;
-           text-align: center;
-       ">
-           <span style="font-size: 2em;">⚡</span>
-           <p style="margin: 5px 0; font-weight: bold;">Rapidité</p>
-           <p style="font-size: 0.9em;">Plus rapide que mon café du matin ☕</p>
-       </div>
-       <div style="
-           background: rgba(138,79,255,0.1);
-           padding: 15px;
-           border-radius: 10px;
-           text-align: center;
-       ">
-           <span style="font-size: 2em;">🎨</span>
-           <p style="margin: 5px 0; font-weight: bold;">Créativité</p>
-           <p style="font-size: 0.9em;">Mon IA a plus d'idées que moi un lundi matin 🌈</p>
-       </div>
-   </div>
-   <div style="
-       font-size: 1.2em;
-       color: #8A4FFF;
-       font-weight: bold;
-       margin-top: 20px;
-   ">
-       Mon super pouvoir ? Transformer le café en code ! ☕→ 💻
-   </div>
+    <h3 style="text-align: center; color: #8A4FFF; margin-bottom: 20px;">
+        📊 Anatomie d'une Data Scientist
+    </h3>
+
+    <div style="
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200px;
+        background: rgba(138,79,255,0.2);
+        padding: 15px;
+        border-radius: 15px;
+        text-align: center;
+    ">
+        🧠 Cerveau:<br>
+        40% Algorithmes<br>
+        40% Memes<br>
+        20% Lyrics de K-pop
+    </div>
+    
+    [reste du code similaire pour les autres sections]
 </div>
 """, unsafe_allow_html=True)
-# Ajoutez ceci après les imports existants
-PROJETS = [
-    {
-        "titre": "Détection de Sentiment sur Réseaux Sociaux",
-        "description": "Modèle de NLP utilisant BERT pour analyser les sentiments en temps réel",
-        "technologies": ["Python", "Transformers", "TensorFlow"],
-        "impact": "Précision 95%",
-        "badge": "🤖 NLP"
-    },
-    {
-        "titre": "Prédiction de Prix Immobiliers",
-        "description": "Système de Machine Learning prédisant les prix avec une précision de 95%",
-        "technologies": ["Scikit-learn", "Pandas", "Seaborn"],
-        "impact": "+30% ROI",
-        "badge": "📈 ML"
-    },
-    {
-        "titre": "Recommandation de Contenu IA",
-        "description": "Algorithme de recommandation personnalisé basé sur le filtrage collaboratif",
-        "technologies": ["PyTorch", "NumPy", "Recommenders"],
-        "impact": "+45% Engagement",
-        "badge": "🎯 RecSys"
-    }
-]
+    PROJETS = [
+        {
+            "titre": "Détection de Sentiment sur Réseaux Sociaux",
+            "description": "Modèle de NLP utilisant BERT pour analyser les sentiments en temps réel",
+            "technologies": ["Python", "Transformers", "TensorFlow"],
+            "impact": "Précision 95%",
+            "badge": "🤖 NLP"
+        },
+        {
+            "titre": "Prédiction de Prix Immobiliers",
+            "description": "Système de Machine Learning prédisant les prix avec une précision de 95%",
+            "technologies": ["Scikit-learn", "Pandas", "Seaborn"],
+            "impact": "+30% ROI",
+            "badge": "📈 ML"
+        },
+        {
+            "titre": "Recommandation de Contenu IA",
+            "description": "Algorithme de recommandation personnalisé basé sur le filtrage collaboratif",
+            "technologies": ["PyTorch", "NumPy", "Recommenders"],
+            "impact": "+45% Engagement",
+            "badge": "🎯 RecSys"
+        }
+    ]
 
-# Remplacez la fonction projets() existante par celle-ci
-def projets():
-    st.markdown('<h2 class="section-title">🚀 Mes Projets</h2>', unsafe_allow_html=True)
-    
-    for projet in PROJETS:
-        st.markdown(f"""
-        <div class="project-card interactive-element" style="
-            background: linear-gradient(145deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4));
-            backdrop-filter: blur(15px);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        ">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="color: #8A4FFF;">{projet['titre']}</h3>
-                <span style="
-                    background-color: rgba(138,79,255,0.1);
-                    padding: 5px 10px;
-                    border-radius: 20px;
-                    font-size: 0.9em;
-                ">
-                    {projet['badge']}
-                </span>
-            </div>
-            <p>{projet['description']}</p>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <b>Technologies:</b> {", ".join(projet['technologies'])}
+    # Remplacez la fonction projets() existante par celle-ci
+    def projets():
+        st.markdown('<h2 class="section-title">🚀 Mes Projets</h2>', unsafe_allow_html=True)
+        
+        for projet in PROJETS:
+            st.markdown(f"""
+            <div class="project-card interactive-element" style="
+                background: linear-gradient(145deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4));
+                backdrop-filter: blur(15px);
+                border-radius: 15px;
+                padding: 20px;
+                margin-bottom: 20px;
+                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            ">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: #8A4FFF;">{projet['titre']}</h3>
+                    <span style="
+                        background-color: rgba(138,79,255,0.1);
+                        padding: 5px 10px;
+                        border-radius: 20px;
+                        font-size: 0.9em;
+                    ">
+                        {projet['badge']}
+                    </span>
                 </div>
-                <div style="
-                    background-color: rgba(138,79,255,0.2);
-                    color: #8A4FFF;
-                    padding: 5px 10px;
-                    border-radius: 20px;
-                    font-size: 0.9em;
-                ">
-                    Impact: {projet['impact']}
+                <p>{projet['description']}</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <b>Technologies:</b> {", ".join(projet['technologies'])}
+                    </div>
+                    <div style="
+                        background-color: rgba(138,79,255,0.2);
+                        color: #8A4FFF;
+                        padding: 5px 10px;
+                        border-radius: 20px;
+                        font-size: 0.9em;
+                    ">
+                        Impact: {projet['impact']}
+                    </div>
                 </div>
             </div>
-        </div>
-        """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
 
 
 
