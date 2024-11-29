@@ -235,7 +235,7 @@ def display_profile_image():
 
 # Reste du code identique aux versions précédentes
 def home():
-    st.markdown('<h1 class="main-title">Portfolio de Machine Learning & IA</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-title">Portfolio de Constance Walusiak</h1>', unsafe_allow_html=True)
     display_profile_image()
     st.markdown("""
     <div class="intro-card" style="
@@ -262,7 +262,7 @@ def home():
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 font-size: 1.8em;
-            ">Bonjour! Je suis une Data Scientist passionnée par l'Intelligence Artificielle</h2>
+            ">Bonjour! Je suis une étudiante en Data et Intelligence Artificielle</h2>
         </div>
         <p style="
             font-size: 1.2em;
@@ -272,7 +272,7 @@ def home():
             padding-left: 20px;
             border-left: 4px solid #8A4FFF;
         ">
-            Bienvenue dans mon univers de données et d'apprentissage automatique. Je transforme des problèmes complexes en solutions innovantes grâce à l'IA et au Machine Learning.
+            👩‍💻 Mon portfolio présente mon parcours professionnel, mais également mes projets en Machine Learning et Intelligence Artificielle. Spécialisée dans l'analyse de données complexes, je développe des solutions innovantes en NLP, Computer Vision et Deep Learning. Découvrez mes réalisations et compétences techniques, illustrant ma passion pour l'intelligence artificielle et sa capacité à résoudre des défis concrets.
         </p>
     </div>
     """, unsafe_allow_html=True)
