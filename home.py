@@ -1,6 +1,8 @@
 import streamlit as st
-import random
-import json
+import base64
+from PIL import Image
+import requests
+from io import BytesIO
 
 # Configuration de la page
 st.set_page_config(
@@ -9,191 +11,288 @@ st.set_page_config(
     layout="wide"
 )
 
-# Style CSS Ultra Avancé
+# Styles personnalisés avec fond en dégradé
 st.markdown("""
 <style>
-    :root {
-        --primary-color: #8A4FFF;
-        --secondary-color: #E0AEFF;
-        --background-gradient: linear-gradient(
-            -45deg, 
-            #f3e7e9,    
-            #d3d3e7,    
-            #c1e1c1,    
-            #d1e8e4     
-        );
-    }
-
-    /* Fond holographique */
-    .stApp::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+     .stApp {
         background: 
-            radial-gradient(circle at top right, rgba(138,79,255,0.1), transparent 40%),
-            radial-gradient(circle at bottom left, rgba(224,174,255,0.1), transparent 40%);
-        pointer-events: none;
-        z-index: -1;
+            linear-gradient(217deg, rgba(255,0,0,.1), rgba(255,0,0,0) 70.71%),
+            linear-gradient(127deg, rgba(147,112,219,.1), rgba(147,112,219,0) 70.71%),
+            linear-gradient(336deg, rgba(178,223,238,.1), rgba(178,223,238,0) 70.71%),
+            radial-gradient(circle at 50% 0%, #f5e6ff, transparent 70%),
+            radial-gradient(circle at 0% 100%, #e6f0ff, transparent 70%),
+            radial-gradient(circle at 100% 100%, #fff0f5, transparent 70%);
+        background-size: 400% 400%, 400% 400%, 400% 400%, 200% 200%, 200% 200%, 200% 200%;
+        animation: 
+            gradient-shift 15s ease infinite,
+            pulse 5s ease-in-out infinite;
     }
 
-    /* Animation de particules complexe */
-    @keyframes particle-dance {
-        0% { 
-            transform: translateY(0) rotate(0deg); 
-            opacity: 0.3;
-        }
-        50% { 
-            transform: translateY(-50px) rotate(180deg); 
-            opacity: 0.7;
-        }
-        100% { 
-            transform: translateY(0) rotate(360deg); 
-            opacity: 0.3;
-        }
+    @keyframes gradient-shift {
+        0% { background-position: 0% 50%, 100% 50%, 50% 100%, 0% 0%, 0% 100%, 100% 100%; }
+        50% { background-position: 100% 50%, 0% 50%, 50% 0%, 100% 50%, 100% 0%, 0% 0%; }
+        100% { background-position: 0% 50%, 100% 50%, 50% 100%, 0% 0%, 0% 100%, 100% 100%; }
     }
 
-    .particle-layer {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: -2;
-        overflow: hidden;
-    }
-
-    .particle {
-        position: absolute;
-        background: radial-gradient(circle, 
-            rgba(138,79,255,0.5), 
-            rgba(224,174,255,0.2)
-        );
-        border-radius: 50%;
-        animation: particle-dance linear infinite;
-    }
-
-    /* Effets de cartes 3D */
-    .project-card {
-        perspective: 1000px;
-        transform-style: preserve-3d;
-        transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .project-card:hover {
-        transform: rotateX(10deg) rotateY(10deg) scale(1.05);
-        box-shadow: 
-            0 20px 40px rgba(0,0,0,0.15), 
-            0 15px 30px rgba(138,79,255,0.1);
-    }
-
-    /* Titre holographique */
-    @keyframes holographic-title {
-        0%, 100% { 
-            text-shadow: 
-                0 0 10px rgba(138,79,255,0.5),
-                0 0 20px rgba(224,174,255,0.3);
-        }
-        50% { 
-            text-shadow: 
-                0 0 20px rgba(138,79,255,0.7),
-                0 0 40px rgba(224,174,255,0.5);
-        }
+    @keyframes pulse {
+        0% { opacity: 0.95; }
+        50% { opacity: 1; }
+        100% { opacity: 0.95; }
     }
 
     .main-title {
-        animation: 
-            holographic-title 3s infinite alternate,
-            title-shimmer 3s infinite alternate;
-        background: linear-gradient(
-            90deg, 
-            var(--primary-color), 
-            var(--secondary-color)
-        );
+        font-size: 3rem;
+        font-weight: bold;
+        background: linear-gradient(90deg, #8A4FFF, #E0AEFF);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        text-align: center;
+        padding: 20px 0;
     }
-
-    /* Effets interactifs avancés */
+    .section-title {
+        color: #6A5ACD;
+        border-bottom: 3px solid rgba(106, 90, 205, 0.3);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .project-card {
+        background: rgba(255, 255, 255, 0.6);  /* Légère transparence pour laisser voir le dégradé */
+        backdrop-filter: blur(10px);  /* Effet de verre */
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    .project-card:hover {
+        transform: scale(1.03);
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    }
+    
+    /* Style pour l'image de profil */
+    .profile-image {
+        border-radius: 50%;
+        border: 4px solid white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease;
+    }
+    .profile-image:hover {
+        transform: scale(1.05);
+    }
+            
+        
     .interactive-element {
-        transition: all 0.4s ease;
-        cursor: pointer;
+        transform-style: preserve-3d;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .interactive-element:hover {
-        transform: scale(1.05) rotate(2deg);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+    }
+              
+    .intro-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        margin: 20px 0;
+        transform-style: preserve-3d;
+        transition: all 0.3s ease;
     }
 
-    /* Design responsif et dynamique */
-    @media (max-width: 768px) {
-        .project-card {
-            transform: none !important;
-        }
+    .intro-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px 0 rgba(31, 38, 135, 0.15);
     }
+
+    .intro-title {
+        margin: 0;
+        background: linear-gradient(90deg, #8A4FFF, #E0AEFF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.8em;
+    }
+
+    .intro-text {
+        font-size: 1.2em;
+        line-height: 1.6;
+        color: #4a4a4a;
+        margin-bottom: 0;
+        padding-left: 20px;
+        border-left: 4px solid #8A4FFF;
+    }
+
+    /* Style pour la sidebar */
+    .css-1d391kg {  /* Classe de la sidebar */
+        background: linear-gradient(to bottom, rgba(138, 79, 255, 0.1), rgba(224, 174, 255, 0.1)) !important;
+        backdrop-filter: blur(10px);
+    }
+
+    .streamlit-expanderHeader {
+        background-color: rgba(138, 79, 255, 0.05) !important;
+    }
+
+    /* Style pour les boutons radio dans la sidebar */
+    .stRadio > label {
+        color: #8A4FFF !important;
+        font-weight: 500;
+    }
+
+    .stRadio > div[role="radiogroup"] > label {
+        background-color: rgba(138, 79, 255, 0.1) !important;
+        border-radius: 10px;
+        padding: 10px 15px;
+        margin: 5px 0;
+        transition: all 0.3s ease;
+    }
+
+    .stRadio > div[role="radiogroup"] > label:hover {
+        background-color: rgba(138, 79, 255, 0.2) !important;
+        transform: translateX(5px);
+    }
+
+    /* Style pour le titre de la sidebar */
+    .sidebar .sidebar-content {
+        background: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .sidebar .sidebar-content h1 {
+        color: #8A4FFF !important;
+        font-size: 1.5em !important;
+        margin-bottom: 20px !important;
+        border-bottom: 2px solid rgba(138, 79, 255, 0.2);
+        padding-bottom: 10px;
+    }
+    
+            /* Style pour les labels radio */
+    .st-emotion-cache-pk3ts8 {
+        min-height: 60px !important;
+        width: 100% !important;
+        background: rgba(138, 79, 255, 0.1) !important;
+        padding: 15px !important;
+        margin: 8px 0 !important;
+        border-radius: 15px !important;
+        transition: all 0.3s ease;
+    }
+
+    /* Style pour le conteneur de navigation */
+    [data-testid="stSidebar"] {
+        background: rgba(138, 79, 255, 0.15) !important;
+        backdrop-filter: blur(10px);
+    }
+
+    section[data-testid="stSidebar"] > div {
+        padding: 2rem 1rem;
+    }
+
+    /* Style pour le conteneur des boutons radio */
+    .st-emotion-cache-16idsys p {
+        font-size: 1.1em;
+        color: #6A5ACD;
+    }
+
+    /* Style hover pour les boutons */
+    .st-emotion-cache-pk3ts8:hover {
+        background: rgba(138, 79, 255, 0.2) !important;
+        transform: translateX(5px);
+    }
+   
+    
 </style>
 """, unsafe_allow_html=True)
 
-# Script JavaScript pour les particules dynamiques
-st.markdown("""
-<script>
-function createParticles() {
-    const particleLayer = document.createElement('div');
-    particleLayer.classList.add('particle-layer');
-    
-    for(let i = 0; i < 50; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        particle.style.width = `${Math.random() * 10 + 2}px`;
-        particle.style.height = particle.style.width;
-        particle.style.top = `${Math.random() * 100}%`;
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
-        particle.style.opacity = Math.random();
-        
-        particleLayer.appendChild(particle);
-    }
-    
-    document.body.appendChild(particleLayer);
-}
+# Fonction pour afficher l'image de profil
+def display_profile_image():
+    col1, col2, col3 = st.columns([1,3,1])
+    with col2:
+        st.markdown("""
+        <div style="display: flex; justify-content: center;">
+            <img src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=None&hairColor=Blonde&facialHairType=Blank&clotheType=Hoodie&clotheColor=PastelBlue&eyeType=Default&eyebrowType=Default&mouthType=Smile&skinColor=Light" 
+                 alt="Photo de Profil" 
+                 class="profile-image"
+                 style="width: 250px; height: 250px; object-fit: cover;"
+            >
+        </div>
+        """, unsafe_allow_html=True)
 
-// Appel au chargement
-createParticles();
-</script>
-""", unsafe_allow_html=True)
+# Reste du code identique aux versions précédentes
+def home():
+    st.markdown('<h1 class="main-title">Portfolio de Machine Learning & IA</h1>', unsafe_allow_html=True)
+    display_profile_image()
+    st.markdown("""
+    <div class="intro-card" style="
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        margin: 20px 0;
+        transform-style: preserve-3d;
+        transition: all 0.3s ease;
+    ">
+        <div style="
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        ">
+            <span style="font-size: 2em;">👋 </span>
+            <h2 style="
+                margin: 0;
+                background: linear-gradient(90deg, #8A4FFF, #E0AEFF);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-size: 1.8em;
+            ">Bonjour! Je suis une Data Scientist passionnée par l'Intelligence Artificielle</h2>
+        </div>
+        <p style="
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #4a4a4a;
+            margin-bottom: 0;
+            padding-left: 20px;
+            border-left: 4px solid #8A4FFF;
+        ">
+            Bienvenue dans mon univers de données et d'apprentissage automatique. Je transforme des problèmes complexes en solutions innovantes grâce à l'IA et au Machine Learning.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
-# Base de données de projets enrichie
+# Ajoutez ceci après les imports existants
 PROJETS = [
     {
-        "titre": "Détection de Sentiment Multilingue",
-        "description": "Modèle NLP avancé détectant les nuances émotionnelles dans 15 langues",
-        "technologies": ["Transformers", "PyTorch", "Multilingual BERT"],
-        "impact": "Précision de 92%",
-        "categorie": "NLP",
-        "badge": "🌍 Multilingue"
+        "titre": "Détection de Sentiment sur Réseaux Sociaux",
+        "description": "Modèle de NLP utilisant BERT pour analyser les sentiments en temps réel",
+        "technologies": ["Python", "Transformers", "TensorFlow"],
+        "impact": "Précision 95%",
+        "badge": "🤖 NLP"
     },
     {
-        "titre": "Recommandation IA Personnalisée",
-        "description": "Système de recommandation utilisant l'apprentissage par renforcement",
-        "technologies": ["TensorFlow", "Keras", "Recommender Systems"],
-        "impact": "Augmentation de l'engagement utilisateur de 45%",
-        "categorie": "Machine Learning",
-        "badge": "🚀 Innovant"
+        "titre": "Prédiction de Prix Immobiliers",
+        "description": "Système de Machine Learning prédisant les prix avec une précision de 95%",
+        "technologies": ["Scikit-learn", "Pandas", "Seaborn"],
+        "impact": "+30% ROI",
+        "badge": "📈 ML"
     },
     {
-        "titre": "Prédiction de Risques Financiers",
-        "description": "Modèle prédictif évaluant les risques d'investissement en temps réel",
-        "technologies": ["Scikit-learn", "Pandas", "XGBoost"],
-        "impact": "Réduction des pertes de 30%",
-        "categorie": "Finance & IA",
-        "badge": "💹 Finance"
+        "titre": "Recommandation de Contenu IA",
+        "description": "Algorithme de recommandation personnalisé basé sur le filtrage collaboratif",
+        "technologies": ["PyTorch", "NumPy", "Recommenders"],
+        "impact": "+45% Engagement",
+        "badge": "🎯 RecSys"
     }
 ]
 
-def generate_projects():
+# Remplacez la fonction projets() existante par celle-ci
+def projets():
+    st.markdown('<h2 class="section-title">🚀 Mes Projets</h2>', unsafe_allow_html=True)
+    
     for projet in PROJETS:
         st.markdown(f"""
         <div class="project-card interactive-element" style="
@@ -202,10 +301,16 @@ def generate_projects():
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         ">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="color: var(--primary-color);">{projet['titre']}</h3>
-                <span style="background-color: rgba(138,79,255,0.1); padding: 5px 10px; border-radius: 20px;">
+                <h3 style="color: #8A4FFF;">{projet['titre']}</h3>
+                <span style="
+                    background-color: rgba(138,79,255,0.1);
+                    padding: 5px 10px;
+                    border-radius: 20px;
+                    font-size: 0.9em;
+                ">
                     {projet['badge']}
                 </span>
             </div>
@@ -215,10 +320,11 @@ def generate_projects():
                     <b>Technologies:</b> {", ".join(projet['technologies'])}
                 </div>
                 <div style="
-                    background-color: rgba(138,79,255,0.2); 
-                    color: var(--primary-color);
-                    padding: 5px 10px; 
+                    background-color: rgba(138,79,255,0.2);
+                    color: #8A4FFF;
+                    padding: 5px 10px;
                     border-radius: 20px;
+                    font-size: 0.9em;
                 ">
                     Impact: {projet['impact']}
                 </div>
@@ -226,51 +332,46 @@ def generate_projects():
         </div>
         """, unsafe_allow_html=True)
 
-def main():
-    st.markdown('<h1 class="main-title">Portfolio IA Révolutionnaire</h1>', unsafe_allow_html=True)
+
+
+
+# Section Compétences
+def competences():
+    st.markdown('<h2 class="section-title">💡 Compétences</h2>', unsafe_allow_html=True)
     
-    # Sections dynamiques
-    tab1, tab2, tab3 = st.tabs(["🚀 Projets", "💡 Compétences", "📊 Parcours"])
+    cols = st.columns(3)
+    skills = [
+        ("Machine Learning", 90),
+        ("Deep Learning", 85), 
+        ("Python", 95),
+        ("TensorFlow", 80),
+        ("NLP", 75),
+        ("Data Visualization", 85)
+    ]
     
-    with tab1:
-        st.markdown("## Mes Projets Innovants")
-        generate_projects()
-    
-    with tab2:
-        st.markdown("## Compétences Techniques")
-        skills = {
-            "Machine Learning": 90,
-            "Deep Learning": 85,
-            "NLP": 80,
-            "Computer Vision": 75,
-            "Python": 95,
-            "TensorFlow": 88
-        }
-        
-        for skill, level in skills.items():
-            st.progress(level)
-            st.markdown(f"**{skill}** - {level}%")
-    
-    with tab3:
-        st.markdown("## Mon Parcours Professionnel")
-        timeline = [
-            {"annee": "2020", "poste": "Data Scientist Junior", "entreprise": "TechInnovate"},
-            {"annee": "2022", "poste": "Data Scientist Confirmé", "entreprise": "AIHub"},
-            {"annee": "2024", "poste": "Lead Data Scientist", "entreprise": "GlobalAI"}
-        ]
-        
-        for exp in timeline:
-            st.markdown(f"""
-            <div class="interactive-element" style="
-                background: rgba(255,255,255,0.5);
-                border-left: 4px solid var(--primary-color);
-                padding: 10px 20px;
-                margin-bottom: 10px;
-            ">
-                <h4>{exp['annee']} - {exp['poste']}</h4>
-                <p>{exp['entreprise']}</p>
+    for i, (skill, level) in enumerate(skills):
+        cols[i % 3].markdown(f"""
+        <div class="project-card" style="text-align:center;">
+            <h4>{skill}</h4>
+            <div style="background-color: #E6E6FA; border-radius: 10px;">
+                <div style="width:{level}%; background-color: #8A4FFF; height:20px; border-radius: 10px;"></div>
             </div>
-            """, unsafe_allow_html=True)
+            <p>{level}%</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# Navigation principale
+def main():
+    st.sidebar.title("Navigation")
+    page = st.sidebar.radio("Choisissez une section", 
+                             ["Accueil", "Projets", "Compétences"])
+    
+    if page == "Accueil":
+        home()
+    elif page == "Projets":
+        projets()
+    else:
+        competences()
 
 if __name__ == "__main__":
     main()
