@@ -169,7 +169,7 @@ st.markdown("""
         padding-bottom: 10px;
     }
     
-            /* Style pour les labels radio */
+         
     .st-emotion-cache-pk3ts8 {
         min-height: 60px !important;
         width: 100% !important;
@@ -200,6 +200,31 @@ st.markdown("""
     .st-emotion-cache-pk3ts8:hover {
         background: rgba(138, 79, 255, 0.2) !important;
         transform: translateX(5px);
+    }
+            
+
+
+
+
+    /* Style pour la barre d'outils supérieure */
+    .stApp header {
+        background: rgba(138, 79, 255, 0.15) !important;
+        backdrop-filter: blur(10px);
+    }
+
+    /* Style pour les boutons dans la barre d'outils */
+    .stApp header button {
+        color: #8A4FFF !important;
+    }
+
+    /* Hover effect pour les boutons */
+    .stApp header button:hover {
+        background: rgba(138, 79, 255, 0.2) !important;
+    }
+
+    /* Style pour les icônes dans la barre d'outils */
+    .stApp header [data-testid="stToolbar"] {
+        right: 2rem;
     }
    
     
