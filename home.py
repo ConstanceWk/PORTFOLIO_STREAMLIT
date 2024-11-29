@@ -3,6 +3,9 @@ import base64
 from PIL import Image
 import requests
 from io import BytesIO
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 # Configuration de la page
 st.set_page_config(
@@ -233,6 +236,82 @@ def display_profile_image():
         </div>
         """, unsafe_allow_html=True)
 
+
+
+def create_3d_brain_viz():
+   # Générer des données pour la forme du cerveau
+   t = np.linspace(0, 10, 100)
+   x = np.outer(np.cos(t), np.cos(t))
+   y = np.outer(np.cos(t), np.sin(t))
+   z = np.outer(np.ones(100), np.sin(t))
+
+   # Créer la visualisation 3D
+   fig = make_subplots(specs=[[{'type': 'surface'}]])
+
+   # Surface principale
+   surface = go.Surface(
+       x=x, y=y, z=z,
+       colorscale=[[0, '#E0AEFF'], [1, '#8A4FFF']],
+       opacity=0.8,
+       showscale=False,
+       hoverinfo='none'
+   )
+   fig.add_trace(surface)
+
+   # Ajouter des particules animées
+   particles_x = np.random.randn(50)
+   particles_y = np.random.randn(50)
+   particles_z = np.random.randn(50)
+   
+   fig.add_trace(go.Scatter3d(
+       x=particles_x, y=particles_y, z=particles_z,
+       mode='markers',
+       marker=dict(
+           size=4,
+           color='#8A4FFF',
+           opacity=0.8
+       ),
+       hoverinfo='none'
+   ))
+
+   # Mise en page
+   fig.update_layout(
+       title=dict(
+           text='Mon Cerveau de Data Scientist',
+           x=0.5,
+           y=0.95,
+           font=dict(size=24, color='#8A4FFF')
+       ),
+       scene=dict(
+           xaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
+           yaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
+           zaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
+           camera=dict(
+               up=dict(x=0, y=0, z=1),
+               center=dict(x=0, y=0, z=0),
+               eye=dict(x=1.5, y=1.5, z=1.5)
+           ),
+       ),
+       paper_bgcolor='rgba(0,0,0,0)',
+       plot_bgcolor='rgba(0,0,0,0)',
+       margin=dict(l=0, r=0, t=0, b=0),
+       showlegend=False,
+   )
+
+   # Animation
+   fig.update_layout(
+       updatemenus=[{
+           'type': 'buttons',
+           'showactive': False,
+           'buttons': [{
+               'label': 'Play',
+               'method': 'animate',
+               'args': [None, {'frame': {'duration': 50, 'redraw': True}, 'fromcurrent': True}]
+           }]
+       }]
+   )
+
+   return fig
 # Reste du code identique aux versions précédentes
 def home():
     st.markdown('<h1 class="main-title">Portfolio de Constance Walusiak</h1>', unsafe_allow_html=True)
@@ -399,6 +478,20 @@ def home():
     [reste du code similaire pour les autres sections]
 </div>
 """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="intro-card" style="margin: 30px 0;">
+    """, unsafe_allow_html=True)
+    
+    # Graphique 3D dans la carte
+    fig = create_3d_brain_viz()
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("""
+    </div>
+    """, unsafe_allow_html=True)
+    
+    
     PROJETS = [
         {
             "titre": "Détection de Sentiment sur Réseaux Sociaux",
