@@ -1,8 +1,8 @@
 import streamlit as st
-from pages.home import *
-from pages.projects import *
-from pages.skills import *
-from pages.parcours import *
+from home import *
+from projects import *
+from skills import *
+from parcours import *
 from style import *
 
 def main():
